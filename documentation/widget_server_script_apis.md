@@ -13,7 +13,7 @@ Service Portal provides a set of convenience methods found on the global `$sp` o
 | [getListColumns](#getListColumns)(String tableName, String view): |Returns a list of the specified table's columns in the specified view|
 | [getMenuItems](#getMenuItems)(String sys_id): Array | Returns the menu items for the specified instance |
 | [getMenuHREF](#getMenuHREF)(GlideRecord): String | Returns the (?id=) portion of the URL based on the sp_menu type. |
-| [getParameter](#getParameter)(String): String | Returns the value of a given key from the query string or post body. |
+| [getParameter](#getParameter)(String): Object | Returns the value of a given key from the query string or post body. |
 | [getPortalRecord](#getPortalRecord)(): GlideRecord  | Returns the portal's GlideRecord. |
 | [getRecord](#getRecord)(): Glide | Returns the GlideRecord for the current sp_instance\*. Returns null if the widget is embedded by another widget. |
 | [getRecordDisplayValues](#getRecordDisplayValues) (Object, GlideRecord, String): void | Copies display values for the specified field names from a GlideRecord into the data parameter. |
@@ -25,6 +25,9 @@ Service Portal provides a set of convenience methods found on the global `$sp` o
 | [getValues](#getValues)(Object, String): void | Copies values from the request or instance into the data parameter. |
 | [getValues](#getValues)(Object): void | Copies values from the widget's sp_instance GlideRecord into the data parameter. |
 | [getWidget](#getWidget)(String, Object): Object | Returns a widget model for embedding a widget inside another widget. |
+| getSCRecord(): Object | Returns sc_cat_item record for the portal's catalog with sys_class_name != sc_cat_item_wizard and active = true in the query. GlideRecord returned has not yet triggered the query. |
+| logStat(String type, String table, String id, *opt String comments*): void | Create a new entry in the `sp_log` table with a table name, a record sys_id from that name, and some type and optional comments. Handy for doing things like logging searches or visits to pages, etc. |
+
 
 <a name="getPortalRecord"></a> $sp.getPortalRecord()
 ------
@@ -276,6 +279,33 @@ Result
 
 ![Screenshot](/assets/widget_server_script_apis/getDisplayValue.png)
 
+<a name="getRecordElements"></a> $sp.getRecordElements()
+-----
+Copies display values for the specified field names from a GlideRecord into the data parameter.
+
+
+- $sp.getRecordElements( Object, GlideRecord, String ): void 
+	- **Parameters**
+		- (*Object*) data 
+		 Must pass data object instantiated by the server.
+		- (*GlideRecord*) GlideRecord 
+		 Any GlideRecord of data
+		- (*String*) String 
+		 Comma-delimited string of fieldnames
+
+	- **Returns**
+		- (*Void*)
+		 Field objects will be added to data
+<br/>
+Server Script
+
+```javascript
+(function($sp) {
+        var gr = new GlideRecord("tablename");
+	var fieldnames = "sys_id,field_name";
+ 	$sp.getRecordElements(data, gr, fieldnames); 
+})($sp);
+```
 
 <a name="getValue"></a> $sp.getValue()
 -----
